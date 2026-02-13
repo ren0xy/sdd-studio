@@ -1,0 +1,28 @@
+# General
+- some skill to ensure when doing raw prompts to modify a spec to ensure structure/itegrity ??
+
+# Tasks 
+- option above the markdown "## Tasks" title maybe to handle everything, show all stats 
+- add option to view diff (open window)
+- only Queued status has hourglass icon in front, Tick/InProgress need an icon!
+- StartSubgroup should not be available if its items are in queue (generally the group is)
+- some kind of log output as tasks get executed, especially errors ??
+    - especially when it trial-errors multiple ways to invoke a console command and figures it out, should log it for future
+    - it needs to track better of what it tried and didnt work
+    - maybe it needs to ask itself questions/reflect ?
+- some metadata json file to track task queue etc ??
+
+
+- extension UI - some progress bar for each task file whats going on ??
+- wow ?? templates are already filled after creating via + so where does one put description ??
+
+
+- kiro feature: invoking context gather ?? slash commands have it 
+
+--
+
+<instructions>
+Distinguish what is in domain of sdd-framework and what is in domain of sdd-studio.
+Properly route issues to their domain and create specs there if needed to handle them.
+Specs must be independend so they can be implemented standalone, but designed to ensure interfacing/compatibility of outputs.
+</instructions>

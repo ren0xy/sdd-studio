@@ -1,0 +1,150 @@
+{
+  "name": "sdd-studio",
+  "displayName": "SDD Studio",
+  "description": "A VS Code extension for managing spec-driven development workflows across multiple AI coding agent platforms.",
+  "version": "0.1.0",
+  "publisher": "sdd-studio",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ren0xy/sdd-studio.git"
+  },
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "sddStudio.createSpec",
+        "title": "SDD Studio: Create Spec",
+        "icon": "$(add)"
+      },
+      {
+        "command": "sddStudio.deleteSpec",
+        "title": "SDD Studio: Delete Spec"
+      },
+      {
+        "command": "sddStudio.switchPlatform",
+        "title": "SDD Studio: Switch Platform"
+      },
+      {
+        "command": "sddStudio.openDocument",
+        "title": "SDD Studio: Open Spec Document"
+      },
+      {
+        "command": "sddStudio.refreshSpecs",
+        "title": "Refresh",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "sddStudio.refineDocument",
+        "title": "SDD Studio: Refine Document"
+      },
+      {
+        "command": "sddStudio.showLog",
+        "title": "SDD Studio: Show Log"
+      }
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "sddStudio.createSpec",
+          "when": "view == sddStudio.specsView",
+          "group": "navigation"
+        },
+        {
+          "command": "sddStudio.refreshSpecs",
+          "when": "view == sddStudio.specsView",
+          "group": "navigation"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "sddStudio.deleteSpec",
+          "when": "view == sddStudio.specsView && viewItem == spec"
+        }
+      ]
+    },
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "sddStudio",
+          "title": "Specs",
+          "icon": "resources/icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "sddStudio": [
+        {
+          "id": "sddStudio.specsView",
+          "name": "Specs"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "SDD Studio",
+      "properties": {
+        "sddStudio.activePlatform": {
+          "type": "string",
+          "default": "kiro",
+          "enum": [
+            "kiro",
+            "claude-code",
+            "codex",
+            "antigravity",
+            "amazonq"
+          ],
+          "description": "The active AI coding agent platform."
+        },
+        "sddStudio.specsPath": {
+          "type": "string",
+          "default": ".kiro/specs",
+          "description": "Path to the specs directory relative to workspace root."
+        },
+        "sddStudio.autoDetectPlatform": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically detect the active platform from workspace files."
+        },
+        "sddStudio.viewVisibility": {
+          "type": "object",
+          "default": {
+            "specs": true,
+            "steering": true,
+            "skills": true,
+            "settings": true
+          },
+          "description": "Toggle visibility of individual views."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./tsconfig.json",
+    "watch": "tsc -watch -p ./tsconfig.json",
+    "test": "vitest --run",
+    "test:watch": "vitest",
+    "lint": "eslint src --ext ts",
+    "deps:init": "git submodule update --init --recursive",
+    "deps:update": "git submodule update --remote --merge deps/sdd-framework",
+    "deps:build": "cd deps/sdd-framework && npm ci && npm run build",
+    "setup": "npm run deps:init && npm run deps:build && npm install"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@types/vscode": "^1.85.0",
+    "fast-check": "^3.15.0",
+    "typescript": "^5.3.0",
+    "vitest": "^1.2.0"
+  },
+  "dependencies": {
+    "sdd-framework": "file:deps/sdd-framework"
+  }
+}
