@@ -1,5 +1,5 @@
 // --- Re-exports from sdd-framework ---
-import type { PlatformId as _PlatformId, TaskStatus } from 'sdd-framework';
+import type { PlatformId as _PlatformId, TaskStatus } from './sdd-framework';
 export type PlatformId = _PlatformId;
 export type TaskStatusValue = TaskStatus;
 

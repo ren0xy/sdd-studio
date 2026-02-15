@@ -2,7 +2,7 @@
 
 A VS Code extension for managing spec-driven development workflows across multiple AI coding agent platforms. Write specs once, work with any AI agent.
 
-AI coding agents each have their own project structure, skill formats, and instruction files — this fragments your workflow when switching tools or collaborating across teams. SDD Studio provides a unified visual interface over the [SDD Framework](https://github.com/ren0xy/sdd-framework), so you manage specs, skills, and steering documents from one place regardless of which agent you use.
+AI coding agents each have their own project structure, skill formats, and instruction files — this fragments your workflow when switching tools or collaborating across teams. SDD Studio provides a unified visual interface over its built-in SDD Framework (`src/sdd-framework/`), so you manage specs, skills, and steering documents from one place regardless of which agent you use.
 
 See [VISION.md](VISION.md) for the product roadmap and future direction.
 
@@ -54,7 +54,7 @@ All platforms share a single spec location: `.kiro/specs/`. That's the whole poi
 │  │   Bridge     │ │   Watchers   │ │        Bar           │  │
 │  └──────────────┘ └──────────────┘ └──────────────────────┘  │
 ├──────────────────────────────────────────────────────────────┤
-│  SDD Framework (npm)                                         │
+│  SDD Framework (internal module: src/sdd-framework/)         │
 │  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────────┐    │
 │  │   Kiro   │ │  Claude  │ │  Codex   │ │ Antigravity  │    │
 │  │ Adapter  │ │  Adapter │ │ Adapter  │ │   Adapter    │    │
@@ -62,7 +62,7 @@ All platforms share a single spec location: `.kiro/specs/`. That's the whole poi
 └──────────────────────────────────────────────────────────────┘
 ```
 
-The extension is a thin GUI layer. All platform-specific logic — path resolution, skill transformation, workspace detection — is delegated to the SDD Framework.
+The extension is a thin GUI layer. All platform-specific logic — path resolution, skill transformation, workspace detection — is delegated to the internal SDD Framework module at `src/sdd-framework/`.
 
 ## Features
 
@@ -84,12 +84,6 @@ git clone https://github.com/ren0xy/sdd-studio.git
 cd sdd-studio
 npm install
 
-# Build the React webview
-cd webview-ui
-npm install
-npm run build
-cd ..
-
 # Compile the extension
 npm run compile
 ```
@@ -100,9 +94,6 @@ Then press `F5` in VS Code to launch the Extension Development Host.
 
 - VS Code 1.85+
 - Node.js 20+
-- [SDD Framework](https://github.com/ren0xy/sdd-framework) installed in your target workspace (`npm install sdd-framework`)
-
-If the framework isn't installed, the extension will show a warning and disable framework-dependent features while keeping basic UI navigation available.
 
 ## Project Structure
 
@@ -117,21 +108,23 @@ sdd-studio/
 │   ├── parsers/                  # Spec and task parsing
 │   │   ├── taskParser.ts
 │   │   └── taskSerializer.ts
-│   └── services/                 # Framework wrappers
-│       ├── platform.ts           # Platform detection and switching
-│       ├── skills.ts             # Skill registry operations
-│       ├── steering.ts           # Steering document management
-│       ├── specs.ts              # Spec CRUD operations
-│       ├── settings.ts           # Configuration management
-│       ├── fileWatcher.ts        # Workspace file watchers
-│       └── promptInjector.ts     # Agent prompt injection
-├── webview-ui/                   # React frontend (Vite)
-│   └── src/
-│       ├── App.tsx               # Collapsible section layout
-│       ├── views/                # Specs, Steering, Skills, Settings
-│       └── hooks/                # useExtensionState, useVSCodeAPI
+│   ├── services/                 # Framework wrappers
+│   │   ├── platform.ts           # Platform detection and switching
+│   │   ├── skills.ts             # Skill registry operations
+│   │   ├── steering.ts           # Steering document management
+│   │   ├── specs.ts              # Spec CRUD operations
+│   │   ├── settings.ts           # Configuration management
+│   │   ├── fileWatcher.ts        # Workspace file watchers
+│   │   └── promptInjector.ts     # Agent prompt injection
+│   └── sdd-framework/            # Inlined framework (runtime-agnostic)
+│       ├── adapters/             # Platform adapters (kiro, claude, codex, etc.)
+│       ├── commands/             # Framework commands
+│       ├── skills/               # Canonical skill definitions
+│       ├── tasks/                # Task tracking and group resolution
+│       └── ...                   # registry, validation, verification, etc.
 ├── package.json
 ├── tsconfig.json
+├── eslint.config.mjs             # ESLint with framework boundary rules
 └── vitest.config.ts
 ```
 
@@ -161,15 +154,12 @@ npm run build:webview # Build React UI
 
 ## Limitations
 
-- **SDD Framework required.** The extension is a GUI consumer — without the framework package installed in the workspace, platform-specific features won't work.
 - **Prompt injection is best-effort.** Each platform has different extension APIs for chat injection. If the target agent isn't available, prompts are copied to clipboard.
 - **AI agent compliance is not guaranteed.** Skills provide instructions; agents interpret them. Results may vary across platforms.
 
 ## Related
 
 - [VISION.md](VISION.md) — Product vision, milestones, and future direction
-- [SDD Framework](https://github.com/ren0xy/sdd-framework) — The portable abstraction layer this extension builds on
-- [SDD Framework Consumer Guide](https://github.com/ren0xy/sdd-framework/blob/main/docs/CONSUMER-GUIDE.md) — Integration patterns for GUI consumers
 
 ## License
 

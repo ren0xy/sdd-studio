@@ -3,8 +3,8 @@ import * as fc from 'fast-check';
 import { parseTaskMarkdown } from '../taskParser';
 import { serializeTaskTree } from '../taskSerializer';
 import { TaskNode, TaskStatusValue } from '../../types';
-import { TaskTracker } from 'sdd-framework';
-import type { TaskStatus } from 'sdd-framework';
+import { TaskTracker } from '../../sdd-framework';
+import type { TaskStatus } from '../../sdd-framework';
 
 const statusArb: fc.Arbitrary<TaskStatusValue> = fc.constantFrom(
   'not_started', 'in_progress', 'completed', 'failed',

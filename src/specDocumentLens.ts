@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import { log } from './log';
 import { isFrameworkAvailable } from './framework/loader';
+import { composeSkillInstruction } from './sdd-framework';
 
 type DocType = 'requirements' | 'design' | 'tasks';
 
@@ -541,10 +542,7 @@ export class SpecDocumentCodeLensProvider implements vscode.CodeLensProvider {
 export function buildRefineInstruction(specName: string, docType: DocType): string {
   if (isFrameworkAvailable()) {
     try {
-      // Dynamic require of the cached framework module
-      // eslint-disable-next-line @typescript-eslint/no-var-requires
-      const fw = require('sdd-framework') as typeof import('sdd-framework');
-      return fw.composeSkillInstruction('refine-spec', { specName, docType });
+      return composeSkillInstruction('refine-spec', { specName, docType });
     } catch {
       // Fall through to local fallback
     }
@@ -561,9 +559,7 @@ export function buildRefineInstruction(specName: string, docType: DocType): stri
 export function buildStartTaskGroupInstruction(specName: string, groupId: string): string {
   if (isFrameworkAvailable()) {
     try {
-      // eslint-disable-next-line @typescript-eslint/no-var-requires
-      const fw = require('sdd-framework') as typeof import('sdd-framework');
-      return fw.composeSkillInstruction('start-task-group', { specName, groupId });
+      return composeSkillInstruction('start-task-group', { specName, groupId });
     } catch {
       // Fall through to local fallback
     }
@@ -574,9 +570,7 @@ export function buildStartTaskGroupInstruction(specName: string, groupId: string
 export function buildRunTaskInstruction(specName: string, taskId: string): string {
   if (isFrameworkAvailable()) {
     try {
-      // eslint-disable-next-line @typescript-eslint/no-var-requires
-      const fw = require('sdd-framework') as typeof import('sdd-framework');
-      return fw.composeSkillInstruction('run-task', { taskId, specName });
+      return composeSkillInstruction('run-task', { taskId, specName });
     } catch {
       // Fall through to local fallback
     }
@@ -594,9 +588,7 @@ export function buildRunTaskInstruction(specName: string, taskId: string): strin
 export function buildRetryTaskInstruction(specName: string, taskId: string): string {
   if (isFrameworkAvailable()) {
     try {
-      // eslint-disable-next-line @typescript-eslint/no-var-requires
-      const fw = require('sdd-framework') as typeof import('sdd-framework');
-      return fw.composeSkillInstruction('run-task', { taskId, specName });
+      return composeSkillInstruction('run-task', { taskId, specName });
     } catch {
       // Fall through to local fallback
     }
@@ -613,9 +605,7 @@ export function buildRetryTaskInstruction(specName: string, taskId: string): str
 export function buildFixTaskInstruction(specName: string, groupId: string, taskId: string): string {
   if (isFrameworkAvailable()) {
     try {
-      // eslint-disable-next-line @typescript-eslint/no-var-requires
-      const fw = require('sdd-framework') as typeof import('sdd-framework');
-      return fw.composeSkillInstruction('analyze-task-failure', { specName, groupId, failedTaskId: taskId });
+      return composeSkillInstruction('analyze-task-failure', { specName, groupId, failedTaskId: taskId });
     } catch {
       // Fall through to local fallback
     }

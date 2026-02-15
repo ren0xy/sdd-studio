@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
-import type { WorkspaceFileSystem } from 'sdd-framework';
-import type { FileSystem } from 'sdd-framework';
-import type { FileSystemOperations } from 'sdd-framework';
+import type { WorkspaceFileSystem } from '../sdd-framework';
+import type { FileSystem } from '../sdd-framework';
+import type { FileSystemOperations } from '../sdd-framework';
 
 /**
  * Bridges the framework's file system interfaces to vscode.workspace.fs.

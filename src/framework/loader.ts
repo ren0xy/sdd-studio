@@ -1,19 +1,17 @@
 import * as vscode from 'vscode';
-import type { PlatformAdapter, CreateSpecFileSystem } from 'sdd-framework';
-import type { PlatformId } from 'sdd-framework';
+import * as framework from '../sdd-framework';
+import type { PlatformAdapter, CreateSpecFileSystem } from '../sdd-framework';
+import type { PlatformId } from '../sdd-framework';
 import { FileSystemBridge } from './fileSystemBridge';
 
-// Lazy-loaded framework module reference
-type FrameworkModule = typeof import('sdd-framework');
-let frameworkModule: FrameworkModule | null = null;
 let frameworkAvailable = false;
 
 export interface FrameworkInstances {
-  workspaceAdapter: InstanceType<FrameworkModule['WorkspaceAdapter']>;
-  skillRegistry: InstanceType<FrameworkModule['SkillRegistry']>;
-  skillTransformer: InstanceType<FrameworkModule['SkillTransformer']>;
-  taskTracker: InstanceType<FrameworkModule['TaskTracker']>;
-  createSpecCommand: InstanceType<FrameworkModule['CreateSpecCommand']>;
+  workspaceAdapter: InstanceType<typeof framework.WorkspaceAdapter>;
+  skillRegistry: InstanceType<typeof framework.SkillRegistry>;
+  skillTransformer: InstanceType<typeof framework.SkillTransformer>;
+  taskTracker: InstanceType<typeof framework.TaskTracker>;
+  createSpecCommand: InstanceType<typeof framework.CreateSpecCommand>;
   /** TaskGroupResolver from spec 007 — undefined when framework version lacks it */
   taskGroupResolver?: unknown;
   adapters: Map<PlatformId, PlatformAdapter>;
@@ -23,19 +21,13 @@ export interface FrameworkInstances {
 let instances: FrameworkInstances | null = null;
 
 /**
- * Lazily load the ESM framework via dynamic import().
- * Caches the module after first successful load.
- *
- * Uses Function-based import to prevent TypeScript (module: "commonjs")
- * from downgrading the dynamic import() into require().
+ * Load the framework module. Now that the framework is inlined as a direct
+ * static import, this simply marks the framework as available and returns
+ * the already-loaded module.
  */
-export async function loadFramework(): Promise<FrameworkModule> {
-  if (frameworkModule) { return frameworkModule; }
-  // eslint-disable-next-line @typescript-eslint/no-implied-eval
-  const importDynamic = new Function('specifier', 'return import(specifier)');
-  frameworkModule = await importDynamic('sdd-framework') as FrameworkModule;
+export async function loadFramework(): Promise<typeof framework> {
   frameworkAvailable = true;
-  return frameworkModule;
+  return framework;
 }
 
 /** Indirection for testability — allows vitest to intercept loadFramework. */
@@ -43,7 +35,7 @@ export const _internal = { loadFramework };
 
 /**
  * Get (or create) the singleton set of framework instances.
- * Instantiates all four platform adapters and registers all built-in skills.
+ * Instantiates all five platform adapters and registers all built-in skills.
  */
 export async function getInstances(workspaceRoot: vscode.Uri): Promise<FrameworkInstances> {
   if (instances) { return instances; }

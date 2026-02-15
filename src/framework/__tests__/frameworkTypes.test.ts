@@ -3,12 +3,12 @@
  * The framework is ESM; the extension is CJS. We use type-only imports
  * at compile time and dynamic import() at runtime.
  */
-import type { PlatformId, TaskStatus, PlatformAdapter, WorkspaceFileSystem } from 'sdd-framework';
+import type { PlatformId, TaskStatus, PlatformAdapter, WorkspaceFileSystem } from '../../sdd-framework';
 import { describe, it, expect } from 'vitest';
 
 describe('sdd-framework type resolution', () => {
   it('can dynamically import the framework at runtime', async () => {
-    const fw = await import('sdd-framework');
+    const fw = await import('../../sdd-framework');
     expect(fw.KiroAdapter).toBeDefined();
     expect(fw.SkillRegistry).toBeDefined();
     expect(fw.SkillTransformer).toBeDefined();
